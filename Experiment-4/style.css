@@ -1,216 +1,319 @@
-/* ===== GLOBAL RESET ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+scroll-behavior:smooth;
 }
 
-/* ===== HERO ===== */
-.hero {
-    height: 80vh;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-        url("https://images.unsplash.com/photo-1566073771259-6a8506099945");
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body{
+background:#f5f7fa;
+overflow-x:hidden;
 }
 
-.hero-content {
-    text-align: center;
-    color: white;
+/* ================= NAVBAR ================= */
+nav{
+position:fixed;
+width:100%;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:rgba(0,0,0,0.85);
+backdrop-filter:blur(10px);
+z-index:1000;
 }
 
-.hero-content h1 {
-    font-size: 48px;
+.logo{
+color:#ffd700;
+font-size:24px;
+font-weight:600;
 }
 
-.hero-content p {
-    margin: 10px 0 20px;
-    font-size: 20px;
+.nav-links{
+display:flex;
+gap:30px;
 }
 
-.btn {
-    padding: 12px 30px;
-    background: #fbc531;
-    color: black;
-    text-decoration: none;
-    border-radius: 30px;
-    font-weight: bold;
+.nav-links a{
+color:white;
+text-decoration:none;
+position:relative;
 }
 
-/* ===== NAVBAR (FIXED ISSUE HERE) ===== */
-nav {
-    background: #6594b8;
-    text-align: center;
-    padding: 12px;
+.nav-links a::after{
+content:'';
+position:absolute;
+bottom:-5px;
+left:0;
+width:0%;
+height:2px;
+background:#ffd700;
+transition:0.4s;
 }
 
-nav a {
-    position: relative;           /* ✅ IMPORTANT */
-    display: inline-block;
-    color: white;
-    margin: 0 15px;
-    padding: 5px 0;
-    text-decoration: none;
-    font-weight: 600;
+.nav-links a:hover::after{
+width:100%;
 }
 
-/* Hover color only (NO vertical move) */
-nav a:hover {
-    color: #fbc531;
+.hamburger{
+display:none;
+color:white;
+font-size:24px;
+cursor:pointer;
 }
 
-/* Underline animation (NO layout shift) */
-nav a::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -3px;
-    width: 0;
-    height: 2px;
-    background: #11dec6;
-    transition: width 0.3s ease;
+/* ================= HERO ================= */
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+url("https://images.unsplash.com/photo-1566073771259-6a8506099945");
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+padding:20px;
 }
 
-nav a:hover::after {
-    width: 100%;
+.hero h1{
+font-size:60px;
+animation:fadeDown 1s ease;
 }
 
-/* ===== SECTIONS ===== */
-section {
-    padding: 60px 20px;
-    text-align: center;
-    scroll-margin-top: 80px; /* ✅ anchor scroll fix */
+.hero p{
+font-size:22px;
+margin:15px 0 30px;
+animation:fadeUp 1.2s ease;
 }
 
-/* ===== ABOUT ===== */
-.about {
-    background: #f5f6fa;
+.btn{
+padding:14px 40px;
+background:#ffd700;
+border-radius:50px;
+font-weight:600;
+color:black;
+text-decoration:none;
+transition:0.4s;
 }
 
-.features {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+.btn:hover{
+background:white;
+transform:scale(1.05);
 }
 
-/* ===== ROOMS ===== */
-.room-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap: 25px;
-    margin-top: 30px;
+/* ================= SECTIONS ================= */
+section{
+padding:100px 20px;
+text-align:center;
 }
 
-.room-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+section h2{
+font-size:40px;
+margin-bottom:30px;
+color:#2c3e50;
 }
 
-.room-card:hover {
-    transform: translateY(-8px);
+/* ================= FEATURES ================= */
+.features{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+margin-top:40px;
 }
 
-.room-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.features div{
+background:white;
+padding:25px 35px;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,0.1);
+transition:0.4s;
 }
 
-/* ===== GALLERY ===== */
-.gallery {
-    background: #f5f6fa;
+.features div:hover{
+transform:translateY(-10px);
 }
 
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-    gap: 15px;
-    margin-top: 30px;
+/* ================= ROOMS ================= */
+.room-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
 }
 
-.gallery-grid img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: transform 0.3s;
+.room-card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 20px 50px rgba(0,0,0,0.1);
+transition:0.4s;
+cursor:pointer;
+text-align:center;
+padding-bottom:20px;
 }
 
-.gallery-grid img:hover {
-    transform: scale(1.05);
+.room-card:hover{
+transform:translateY(-15px);
 }
 
-/* ===== BOOKING ===== */
-.booking {
-    background: #f5f6fa;
-    display: flex;
-    justify-content: center;
+.room-card img{
+width:100%;
+height:220px;
+object-fit:cover;
 }
 
-.booking-card {
-    background: white;
-    width: 100%;
-    max-width: 520px;
-    padding: 35px 30px;
-    border-radius: 12px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+.room-card button{
+background:#2c3e50;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:20px;
+cursor:pointer;
 }
 
-.booking-card form input,
-.booking-card form select,
-.booking-card form button {
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+/* ================= GALLERY ================= */
+.gallery{
+background:#f0f2f5;
 }
 
-.booking-card form button {
-    background: #2c3e50;
-    color: white;
-    border: none;
-    cursor: pointer;
+.gallery-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
 }
 
-/* ===== CONTACT ===== */
-.contact {
-    padding: 50px 20px;
+.gallery-grid img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:15px;
+transition:0.4s;
 }
 
-.contact p {
-    margin: 8px 0;
+.gallery-grid img:hover{
+transform:scale(1.07);
 }
 
-/* ===== FOOTER ===== */
-footer {
-    background: #1e272e;
-    color: white;
-    text-align: center;
-    padding: 15px;
+/* ================= BOOKING ================= */
+.booking{
+background:linear-gradient(135deg,#2c3e50,#34495e);
+color:white;
+display:flex;
+justify-content:center;
 }
 
-/* ===== MOBILE ===== */
-@media (max-width: 768px) {
-    nav a {
-        display: block;
-        margin: 10px 0;
-    }
+.booking-card{
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(20px);
+padding:40px;
+border-radius:20px;
+width:100%;
+max-width:550px;
+}
 
-    .hero-content h1 {
-        font-size: 34px;
-    }
+.booking-card input,
+.booking-card select,
+.booking-card button{
+width:100%;
+padding:14px;
+margin-bottom:18px;
+border-radius:8px;
+border:none;
+}
+
+.booking-card button{
+background:#ffd700;
+font-weight:bold;
+cursor:pointer;
+}
+
+.booking-card button:hover{
+background:white;
+}
+
+/* ================= CONTACT ================= */
+.contact{
+background:#1e272e;
+color:white;
+}
+
+.contact i{
+color:#ffd700;
+margin-right:10px;
+}
+
+/* ================= FOOTER ================= */
+footer{
+background:black;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+/* ================= MODAL & POPUP ================= */
+.modal,
+.popup{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+justify-content:center;
+align-items:center;
+}
+
+.modal-content,
+.popup-box{
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+max-width:400px;
+width:90%;
+}
+
+.modal-content span{
+float:right;
+cursor:pointer;
+font-size:24px;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+
+.nav-links{
+flex-direction:column;
+position:absolute;
+top:60px;
+right:0;
+background:black;
+width:100%;
+display:none;
+padding:20px 0;
+}
+
+.nav-links.active{
+display:flex;
+}
+
+.hamburger{
+display:block;
+}
+
+.hero h1{
+font-size:36px;
+}
+
 }
