@@ -1,0 +1,13 @@
+*{margin:0;padding:0;box-sizing:border-box}
+nav ul li a:hover{background:#11dec6 !important;transform:translateY(-2px);box-shadow:0 4px 15px rgba(17,222,198,0.5)}
+nav ul li a::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:3px;background:#11dec6;transition:width 0.3s}
+nav ul li a:hover::after{width:80%}
+.skill-card:hover{transform:translateY(-5px)}
+table tbody tr:nth-child(even){background:#f8f9fa}
+table tbody tr:hover{background:#e6f2ff}
+table a{color:#667eea;text-decoration:none;font-weight:600;transition:color 0.3s}
+table a:hover{color:#11dec6}
+.social-link:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+input:focus,textarea:focus{outline:none;border-color:#11dec6}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+@media (max-width:768px){header h1{font-size:2em !important}nav ul li{display:block !important;margin:10px 0 !important}section{padding:20px !important}}
