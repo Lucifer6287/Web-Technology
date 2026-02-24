@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Calculator Pro</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    background: radial-gradient(circle at center, #111, #000);
+}
+
+/* 📱 Calculator */
+.phone {
+    width: 320px;
+    height: 620px;
+    background: #000;
+    border-radius: 30px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* important */
+    box-shadow:
+        0 0 20px #00f0ff,
+        0 0 60px rgba(0,255,255,0.6),
+        inset 0 0 15px rgba(0,255,255,0.2);
+}
+
+/* 🧹 Clear history (corner button) */
+.clear-history-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #222;
+    color: white;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.clear-history-btn:hover {
+    background: #444;
+}
+
+/* 📊 History */
+.history {
+    height: 100px;
+    overflow-y: auto;
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 25px; /* space for button */
+    margin-bottom: 10px;
+}
+
+/* Display */
+#display {
+    height: 70px;
+    font-size: 28px;
+    text-align: right;
+    border: none;
+    background: #000;
+    color: #00ffff;
+    margin-bottom: 10px;
+    outline: none;
+    box-shadow: 0 0 15px #00f0ff;
+}
+
+/* Buttons */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+button {
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    background: #1c1c1c;
+    color: white;
+    transition: 0.2s;
+    box-shadow: 0 4px #000;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00ffff;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Colors */
+.operator { background: orange; }
+.equal { background: #00c853; }
+.clear { background: red; }
+.zero { grid-column: span 2; border-radius: 30px; }
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+    <!-- 🧹 Corner Button -->
+    <button onclick="clearHistory()" class="clear-history-btn">🗑</button>
+    
+    <!-- 📊 History -->
+    <div class="history" id="history"></div>
+
+    <!-- Display -->
+    <input type="text" id="display" disabled>
+
+    <!-- Buttons -->
+    <div class="buttons">
+        <button onclick="clearDisplay()" class="clear">C</button>
+        <button onclick="appendValue('/')">÷</button>
+        <button onclick="appendValue('*')">×</button>
+        <button onclick="appendValue('-')">−</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button onclick="appendValue('+')" class="operator">+</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button onclick="calculate()" class="equal">=</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+
+        <button onclick="appendValue('0')" class="zero">0</button>
+        <button onclick="appendValue('.')">.</button>
+    </div>
+</div>
+
+<script>
+let display = document.getElementById("display");
+let historyDiv = document.getElementById("history");
+
+function appendValue(val) {
+    display.value += val;
+}
+
+function clearDisplay() {
+    display.value = "";
+}
+
+function calculate() {
+    try {
+        let expression = display.value;
+        let result = eval(expression);
+
+        let entry = expression + " = " + result;
+        let p = document.createElement("div");
+        p.innerText = entry;
+        historyDiv.prepend(p);
+
+        display.value = result;
+    } catch {
+        display.value = "Error";
+    }
+}
+
+/* 🧹 Clear history */
+function clearHistory() {
+    if (confirm("Clear all history?")) {
+        historyDiv.innerHTML = "";
+    }
+}
+
+/* ⌨️ Keyboard */
+document.addEventListener("keydown", function(e) {
+    if ((e.key >= '0' && e.key <= '9') || "+-*/.".includes(e.key)) {
+        appendValue(e.key);
+    } else if (e.key === "Enter") {
+        calculate();
+    } else if (e.key === "Backspace") {
+        display.value = display.value.slice(0, -1);
+    } else if (e.key.toLowerCase() === "c") {
+        clearDisplay();
+    }
+});
+</script>
+
+</body>
+</html>
