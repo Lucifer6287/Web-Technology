@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Registration Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;min-height:100vh;color:#e2e8f0;overflow-x:hidden;}
+#welcome-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);}
+.stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.4);}}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.2;animation:blobFloat var(--bd,10s) ease-in-out infinite;pointer-events:none;}
+@keyframes blobFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-40px);}}
+.welcome-card{position:relative;z-index:2;max-width:700px;width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:32px;padding:64px 60px;text-align:center;backdrop-filter:blur(24px);box-shadow:0 40px 100px rgba(0,0,0,0.5);}
+.logo-ring{width:100px;height:100px;margin:0 auto 32px;background:linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6);border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;box-shadow:0 0 0 8px rgba(167,139,250,0.15),0 20px 50px rgba(167,139,250,0.4);animation:ringPulse 3s ease-in-out infinite;}
+@keyframes ringPulse{0%,100%{box-shadow:0 0 0 8px rgba(167,139,250,0.15),0 20px 50px rgba(167,139,250,0.4);}50%{box-shadow:0 0 0 16px rgba(167,139,250,0.08),0 20px 60px rgba(167,139,250,0.6);}}
+.badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(96,165,250,0.2));border:1px solid rgba(167,139,250,0.4);color:#c4b5fd;font-size:0.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:7px 20px;border-radius:50px;margin-bottom:24px;}
+.wtitle{font-size:3.2rem;font-weight:900;line-height:1.1;margin-bottom:20px;background:linear-gradient(135deg,#ffffff 20%,#c4b5fd 50%,#93c5fd 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.wsub{color:#94a3b8;font-size:1.05rem;line-height:1.75;margin-bottom:44px;max-width:480px;margin-left:auto;margin-right:auto;}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:44px;}
+.feat-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:20px 14px;transition:all 0.3s;}
+.feat-box:hover{background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.35);transform:translateY(-4px);}
+.feat-icon{font-size:1.8rem;margin-bottom:10px;} .feat-text{font-size:0.78rem;color:#94a3b8;font-weight:600;}
+.step-row{display:flex;align-items:center;justify-content:center;margin-bottom:44px;}
+.step-box{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.step-circle{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;box-shadow:0 4px 15px rgba(167,139,250,0.4);}
+.step-text{font-size:0.72rem;color:#64748b;font-weight:700;text-align:center;max-width:72px;text-transform:uppercase;}
+.step-connector{width:52px;height:2px;margin-bottom:28px;background:linear-gradient(90deg,rgba(167,139,250,0.5),rgba(96,165,250,0.5));}
+.btn-enter{display:inline-flex;align-items:center;gap:12px;padding:18px 60px;background:linear-gradient(135deg,#a78bfa 0%,#818cf8 50%,#60a5fa 100%);border:none;border-radius:50px;color:#fff;font-size:1.1rem;font-weight:800;cursor:pointer;letter-spacing:0.5px;box-shadow:0 10px 40px rgba(167,139,250,0.5);transition:all 0.3s;animation:btnGlow 3s ease-in-out infinite;position:relative;overflow:hidden;}
+@keyframes btnGlow{0%,100%{box-shadow:0 10px 40px rgba(167,139,250,0.5);}50%{box-shadow:0 10px 50px rgba(167,139,250,0.7),0 0 0 12px rgba(167,139,250,0.08);}}
+.btn-enter:hover{transform:translateY(-4px) scale(1.03);}
+.btn-arrow{font-size:1.2rem;transition:transform 0.3s;}
+.btn-enter:hover .btn-arrow{transform:translateX(5px);}
+.welcome-note{margin-top:24px;font-size:0.78rem;color:#475569;}
+
+/* FORM PAGE */
+#form-page{display:none;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);min-height:100vh;padding:30px 15px 60px;animation:pageIn 0.6s ease;}
+@keyframes pageIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.top-bar{max-width:860px;margin:0 auto 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.back-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#94a3b8;padding:9px 20px;border-radius:50px;font-size:0.82rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;}
+.back-btn:hover{background:rgba(255,255,255,0.12);color:#e2e8f0;}
+.prog-wrap{flex:1;max-width:220px;}
+.prog-label{font-size:0.72rem;color:#64748b;margin-bottom:5px;text-align:right;font-weight:600;}
+.prog-track{background:rgba(255,255,255,0.08);border-radius:50px;height:7px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#a78bfa,#60a5fa);border-radius:50px;width:0%;transition:width 0.4s;}
+.page-title{text-align:center;font-size:2rem;margin-bottom:6px;background:linear-gradient(90deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;}
+.page-sub{text-align:center;color:#94a3b8;margin-bottom:30px;font-size:0.9rem;}
+.fc{max-width:860px;margin:0 auto;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px 40px;backdrop-filter:blur(12px);}
+.st{font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#a78bfa;margin:28px 0 16px;padding-bottom:8px;border-bottom:1px solid rgba(167,139,250,0.3);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.fw{grid-column:1/-1;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+label{font-size:0.8rem;font-weight:600;color:#cbd5e1;letter-spacing:0.5px;}
+input[type=text],input[type=email],input[type=password],input[type=number],
+input[type=tel],input[type=date],input[type=time],input[type=url],
+input[type=search],input[type=color],textarea,select{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  border-radius:10px;padding:10px 14px;color:#e2e8f0;font-size:0.9rem;
+  outline:none;transition:.2s;width:100%;}
+input:focus,textarea:focus,select:focus{border-color:#a78bfa;background:rgba(167,139,250,0.08);}
+select option{background:#1e293b;color:#e2e8f0;}
+textarea{resize:vertical;min-height:90px;}
+input[type=range]{width:100%;accent-color:#a78bfa;cursor:pointer;}
+.rv{font-size:0.85rem;color:#a78bfa;font-weight:700;text-align:right;}
+input[type=color]{height:44px;padding:4px 8px;cursor:pointer;}
+
+/* Phone field with dial code */
+.phone-row{display:flex;gap:8px;}
+.dial-select{width:auto;min-width:130px;flex-shrink:0;border-radius:10px;padding:10px 10px;cursor:pointer;}
+.phone-input{flex:1;}
+
+/* Country search */
+.country-search-wrap{position:relative;}
+.country-search-input{border-radius:10px 10px 0 0 !important;}
+.country-dropdown{display:none;position:absolute;z-index:100;width:100%;max-height:220px;overflow-y:auto;background:#1e293b;border:1px solid rgba(167,139,250,0.4);border-top:none;border-radius:0 0 10px 10px;}
+.country-dropdown.open{display:block;}
+.country-opt{padding:9px 14px;cursor:pointer;font-size:0.88rem;color:#cbd5e1;transition:.15s;display:flex;align-items:center;gap:8px;}
+.country-opt:hover,.country-opt.active{background:rgba(167,139,250,0.15);color:#e2e8f0;}
+.country-opt .flag{font-size:1.1rem;}
+.country-selected-display{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:0 0 10px 10px;padding:8px 14px;font-size:0.85rem;color:#a78bfa;font-weight:600;min-height:36px;display:flex;align-items:center;gap:8px;}
+
+.cg,.rg{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px;}
+.ci,.ri{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.05);padding:8px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:.2s;}
+.ci:hover,.ri:hover{border-color:#a78bfa;background:rgba(167,139,250,0.1);}
+input[type=checkbox],input[type=radio]{accent-color:#a78bfa;width:16px;height:16px;cursor:pointer;}
+.ci label,.ri label{font-size:0.85rem;cursor:pointer;color:#e2e8f0;margin:0;}
+.tg{display:flex;flex-wrap:wrap;gap:14px;margin-top:4px;}
+.ti{display:flex;align-items:center;gap:10px;}
+.ts{position:relative;display:inline-block;width:44px;height:24px;}
+.ts input{opacity:0;width:0;height:0;}
+.tsl{position:absolute;inset:0;background:rgba(255,255,255,0.15);border-radius:24px;cursor:pointer;transition:.3s;}
+.tsl::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.ts input:checked+.tsl{background:#a78bfa;}
+.ts input:checked+.tsl::before{transform:translateX(20px);}
+.ti label{font-size:0.85rem;color:#e2e8f0;}
+.uz{border:2px dashed rgba(167,139,250,0.4);border-radius:14px;padding:28px 20px;text-align:center;background:rgba(167,139,250,0.04);cursor:pointer;transition:.25s;position:relative;}
+.uz:hover{border-color:#a78bfa;background:rgba(167,139,250,0.1);}
+.uz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uico{font-size:2.2rem;margin-bottom:8px;} .ulbl{font-size:0.9rem;color:#94a3b8;} .ulbl span{color:#a78bfa;font-weight:600;}
+.uinfo{font-size:0.75rem;color:#64748b;margin-top:4px;} .ufn{font-size:0.8rem;color:#a78bfa;margin-top:6px;font-style:italic;}
+.br{display:flex;gap:14px;margin-top:36px;justify-content:center;}
+.btn{padding:12px 36px;border:none;border-radius:50px;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.bp{background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#fff;}
+.bp:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(167,139,250,0.4);}
+.bs{background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.15);}
+.bs:hover{background:rgba(255,255,255,0.1);color:#e2e8f0;}
+#out-sec{max-width:860px;margin:30px auto 0;display:none;}
+#out-div{background:rgba(255,255,255,0.04);border:1px solid rgba(167,139,250,0.3);border-radius:20px;padding:32px 36px;backdrop-filter:blur(12px);}
+.ot{font-size:1.2rem;font-weight:700;color:#a78bfa;margin-bottom:20px;}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.oi{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;}
+.oi.full{grid-column:1/-1;}
+.ok{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#60a5fa;margin-bottom:4px;}
+.ov{font-size:0.9rem;color:#e2e8f0;word-break:break-word;}
+@media(max-width:600px){
+  .fc{padding:24px 20px;}.g2,.g3{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:repeat(2,1fr);}.welcome-card{padding:40px 24px;}
+  .wtitle{font-size:2.2rem;}.og{grid-template-columns:1fr;}.step-connector{width:28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME PAGE -->
+<div id="welcome-page">
+  <div class="stars" id="stars"></div>
+  <div class="blob" style="width:500px;height:500px;background:#7c3aed;top:-150px;left:-180px;--bd:12s;"></div>
+  <div class="blob" style="width:380px;height:380px;background:#2563eb;bottom:-100px;right:-120px;--bd:9s;animation-delay:4s;"></div>
+  <div class="blob" style="width:300px;height:300px;background:#db2777;top:45%;left:55%;--bd:14s;animation-delay:7s;"></div>
+  <div class="welcome-card">
+    <div class="logo-ring">&#128203;</div>
+    <div class="badge">&#10022; Kushwaha Group Of Industry <br> Registration Portal</div>
+    <h1 class="wtitle">Welcome!<br/>Begin Your Journey</h1>
+    <p class="wsub">Register your complete profile in minutes. Upload documents, set preferences, and get instant confirmation — all in one place.</p>
+    <div class="feat-grid">
+      <div class="feat-box"><div class="feat-icon">&#128737;</div><div class="feat-text">Secure &amp; Encrypted</div></div>
+      <div class="feat-box"><div class="feat-icon">&#9889;</div><div class="feat-text">Quick &amp; Easy</div></div>
+      <div class="feat-box"><div class="feat-icon">&#128193;</div><div class="feat-text">File Uploads</div></div>
+      <div class="feat-box"><div class="feat-icon">&#127912;</div><div class="feat-text">Custom Profile</div></div>
+      <div class="feat-box"><div class="feat-icon">&#128276;</div><div class="feat-text">Notifications</div></div>
+      <div class="feat-box"><div class="feat-icon">&#9989;</div><div class="feat-text">Instant Preview</div></div>
+    </div>
+    <div class="step-row">
+      <div class="step-box"><div class="step-circle">1</div><div class="step-text">Fill Details</div></div>
+      <div class="step-connector"></div>
+      <div class="step-box"><div class="step-circle">2</div><div class="step-text">Upload Docs</div></div>
+      <div class="step-connector"></div>
+      <div class="step-box"><div class="step-circle">3</div><div class="step-text">Review</div></div>
+      <div class="step-connector"></div>
+      <div class="step-box"><div class="step-circle">4</div><div class="step-text">Submit</div></div>
+    </div>
+    <button class="btn-enter" onclick="openForm()">Open Registration Form <span class="btn-arrow">&#8594;</span></button>
+    <p class="welcome-note">&#128274; Your data is private and never shared with third parties</p>
+  </div>
+</div>
+
+<!-- FORM PAGE -->
+<div id="form-page">
+  <div class="top-bar">
+    <button class="back-btn" onclick="backToWelcome()">&#8592; Back to Welcome</button>
+    <div class="prog-wrap">
+      <div class="prog-label" id="plabel">0% complete</div>
+      <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
+    </div>
+  </div>
+  <div class="page-title">&#128203; Kushwaha Group Of Industry <br>Registration Form</div>
+  <p class="page-sub">Fill in your details below — click Submit to preview your data</p>
+  <div class="fc">
+
+    <div class="st">&#128100; Personal Information</div>
+    <div class="g2">
+      <div class="fg"><label>First Name *</label><input type="text" id="fname" placeholder="John" oninput="upProg()"/></div>
+      <div class="fg"><label>Last Name *</label><input type="text" id="lname" placeholder="Doe" oninput="upProg()"/></div>
+      <div class="fg"><label>Email Address *</label><input type="email" id="email" placeholder="john@example.com" oninput="upProg()"/></div>
+      <div class="fg">
+        <label>Phone Number (with dial code)</label>
+        <div class="phone-row">
+          <select class="dial-select" id="dialCode" onchange="upProg()">
+          </select>
+          <input type="tel" class="phone-input" id="phone" placeholder="98765 43210"/>
+        </div>
+      </div>
+      <div class="fg"><label>Date of Birth</label><input type="date" id="dob"/></div>
+      <div class="fg"><label>Age</label><input type="number" id="age" placeholder="25" min="1" max="120"/></div>
+      <div class="fg fw"><label>Short Bio</label><textarea id="bio" placeholder="Tell us about yourself..."></textarea></div>
+    </div>
+
+    <div class="st">Gender</div>
+    <div class="rg">
+      <div class="ri"><input type="radio" name="gender" id="gm" value="Male"/><label for="gm">Male</label></div>
+      <div class="ri"><input type="radio" name="gender" id="gf" value="Female"/><label for="gf">Female</label></div>
+      <div class="ri"><input type="radio" name="gender" id="gnb" value="Non-binary"/><label for="gnb">Non-binary</label></div>
+      <div class="ri"><input type="radio" name="gender" id="go" value="Prefer not to say"/><label for="go">Prefer not to say</label></div>
+    </div>
+
+    <div class="st">&#128274; Account Details</div>
+    <div class="g2">
+      <div class="fg"><label>Username *</label><input type="text" id="uname" placeholder="cool_username" oninput="upProg()"/></div>
+      <div class="fg"><label>Password *</label><input type="password" id="pass" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" oninput="upProg()"/></div>
+      <div class="fg"><label>Website / Portfolio URL</label><input type="url" id="website" placeholder="https://yoursite.com"/></div>
+      <div class="fg"><label>Search Tags</label><input type="search" id="stags" placeholder="developer, designer..."/></div>
+    </div>
+
+    <div class="st">&#127968; Address</div>
+    <div class="g2">
+      <div class="fg fw"><label>Street Address</label><input type="text" id="addr" placeholder="123 Main St"/></div>
+      <div class="fg"><label>City</label><input type="text" id="city" placeholder="Tumkur"/></div>
+      <div class="fg"><label>State / Province</label><input type="text" id="state" placeholder="Karnataka"/></div>
+      <div class="fg"><label>PIN / ZIP Code</label><input type="number" id="pin" placeholder="572101"/></div>
+      <div class="fg">
+        <label>Country</label>
+        <div class="country-search-wrap">
+          <input type="text" class="country-search-input" id="countrySearch" placeholder="&#128269; Search country..." autocomplete="off" oninput="filterCountries()" onfocus="openCountryDrop()" onblur="closeCountryDrop()"/>
+          <div class="country-dropdown" id="countryDrop"></div>
+          <div class="country-selected-display" id="countryDisplay">No country selected</div>
+          <input type="hidden" id="countryValue"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="st">&#9989; Skills / Interests</div>
+    <div class="cg">
+      <div class="ci"><input type="checkbox" id="sk1" value="Web Dev"/><label for="sk1">Web Dev</label></div>
+      <div class="ci"><input type="checkbox" id="sk2" value="Mobile Apps"/><label for="sk2">Mobile Apps</label></div>
+      <div class="ci"><input type="checkbox" id="sk3" value="UI/UX Design"/><label for="sk3">UI/UX Design</label></div>
+      <div class="ci"><input type="checkbox" id="sk4" value="Data Science"/><label for="sk4">Data Science</label></div>
+      <div class="ci"><input type="checkbox" id="sk5" value="Machine Learning"/><label for="sk5">Machine Learning</label></div>
+      <div class="ci"><input type="checkbox" id="sk6" value="DevOps"/><label for="sk6">DevOps</label></div>
+      <div class="ci"><input type="checkbox" id="sk7" value="Cybersecurity"/><label for="sk7">Cybersecurity</label></div>
+      <div class="ci"><input type="checkbox" id="sk8" value="Photography"/><label for="sk8">Photography</label></div>
+    </div>
+
+    <div class="st">&#128202; Experience Level</div>
+    <div class="rg">
+      <div class="ri"><input type="radio" name="exp" id="e1" value="Beginner"/><label for="e1">Beginner</label></div>
+      <div class="ri"><input type="radio" name="exp" id="e2" value="Intermediate"/><label for="e2">Intermediate</label></div>
+      <div class="ri"><input type="radio" name="exp" id="e3" value="Advanced"/><label for="e3">Advanced</label></div>
+      <div class="ri"><input type="radio" name="exp" id="e4" value="Expert"/><label for="e4">Expert</label></div>
+    </div>
+
+    <div class="st">&#127912; Preferences &amp; More</div>
+    <div class="g2">
+      <div class="fg"><label>Preferred Meeting Time</label><input type="time" id="atime"/></div>
+      <div class="fg"><label>Favourite Color</label><input type="color" id="fcolor" value="#a78bfa"/></div>
+      <div class="fg"><label>Department</label>
+        <select id="dept"><option value="">— Select —</option><option>Engineering</option><option>Design</option><option>Marketing</option><option>HR</option><option>Finance</option><option>Operations</option></select>
+      </div>
+      <div class="fg"><label>Expected Salary (LPA)</label><input type="number" id="salary" placeholder="10" min="1"/></div>
+      <div class="fg fw"><label>Profile Completion Score</label><input type="range" id="score" min="0" max="100" value="50" oninput="document.getElementById('sv').textContent=this.value+'%'"/><div class="rv" id="sv">50%</div></div>
+    </div>
+
+    <div class="st">&#128276; Notification Settings</div>
+    <div class="tg">
+      <div class="ti"><label class="ts"><input type="checkbox" id="ne" checked/><span class="tsl"></span></label><label>Email Notifications</label></div>
+      <div class="ti"><label class="ts"><input type="checkbox" id="ns"/><span class="tsl"></span></label><label>SMS Alerts</label></div>
+      <div class="ti"><label class="ts"><input type="checkbox" id="np" checked/><span class="tsl"></span></label><label>Push Notifications</label></div>
+      <div class="ti"><label class="ts"><input type="checkbox" id="nl"/><span class="tsl"></span></label><label>Newsletter</label></div>
+    </div>
+
+    <div class="st">&#128193; File Uploads</div>
+    <div class="g2">
+      <div class="fg"><label>Profile Photo</label><div class="uz"><input type="file" id="up-prof" accept="image/*" onchange="sfn(this,'pfname')"/><div class="uico">&#128444;</div><div class="ulbl"><span>Browse</span> or drop here</div><div class="uinfo">JPG, PNG, WEBP</div><div class="ufn" id="pfname">No file selected</div></div></div>
+      <div class="fg"><label>Resume / CV</label><div class="uz"><input type="file" id="up-res" accept=".pdf,.doc,.docx" onchange="sfn(this,'rfname')"/><div class="uico">&#128196;</div><div class="ulbl"><span>Browse</span> or drop here</div><div class="uinfo">PDF, DOC, DOCX</div><div class="ufn" id="rfname">No file selected</div></div></div>
+      <div class="fg"><label>Reguma (Regulatory Documents)</label><div class="uz"><input type="file" id="up-reg" multiple accept=".pdf,.png,.jpg" onchange="sfn(this,'rgfname')"/><div class="uico">&#128220;</div><div class="ulbl"><span>Browse</span> or drop here</div><div class="uinfo">PDF, PNG, JPG · Multiple</div><div class="ufn" id="rgfname">No file selected</div></div></div>
+      <div class="fg"><label>Portfolio / Work Samples</label><div class="uz"><input type="file" id="up-port" multiple onchange="sfn(this,'pofname')"/><div class="uico">&#128188;</div><div class="ulbl"><span>Browse</span> or drop here</div><div class="uinfo">Any format · Multiple</div><div class="ufn" id="pofname">No file selected</div></div></div>
+    </div>
+
+    <div class="st">&#128221; Agreement</div>
+    <div class="cg">
+      <div class="ci"><input type="checkbox" id="terms"/><label for="terms">I agree to the Terms &amp; Conditions</label></div>
+      <div class="ci"><input type="checkbox" id="priv"/><label for="priv">I accept the Privacy Policy</label></div>
+      <div class="ci"><input type="checkbox" id="mkt"/><label for="mkt">Send me updates &amp; offers</label></div>
+    </div>
+
+    <div class="br">
+      <button class="btn bs" onclick="resetF()">&#8635; Reset</button>
+      <button class="btn bp" onclick="submitF()">&#128640; Submit &amp; Preview</button>
+    </div>
+  </div>
+  <div id="out-sec"><div id="out-div"></div></div>
+</div>
+
+<script>
+// ── COUNTRY + DIAL CODE DATA (all countries) ──
+const COUNTRIES = [
+  {name:"Afghanistan",code:"AF",dial:"+93",flag:"🇦🇫"},
+  {name:"Albania",code:"AL",dial:"+355",flag:"🇦🇱"},
+  {name:"Algeria",code:"DZ",dial:"+213",flag:"🇩🇿"},
+  {name:"Andorra",code:"AD",dial:"+376",flag:"🇦🇩"},
+  {name:"Angola",code:"AO",dial:"+244",flag:"🇦🇴"},
+  {name:"Antigua and Barbuda",code:"AG",dial:"+1268",flag:"🇦🇬"},
+  {name:"Argentina",code:"AR",dial:"+54",flag:"🇦🇷"},
+  {name:"Armenia",code:"AM",dial:"+374",flag:"🇦🇲"},
+  {name:"Australia",code:"AU",dial:"+61",flag:"🇦🇺"},
+  {name:"Austria",code:"AT",dial:"+43",flag:"🇦🇹"},
+  {name:"Azerbaijan",code:"AZ",dial:"+994",flag:"🇦🇿"},
+  {name:"Bahamas",code:"BS",dial:"+1242",flag:"🇧🇸"},
+  {name:"Bahrain",code:"BH",dial:"+973",flag:"🇧🇭"},
+  {name:"Bangladesh",code:"BD",dial:"+880",flag:"🇧🇩"},
+  {name:"Barbados",code:"BB",dial:"+1246",flag:"🇧🇧"},
+  {name:"Belarus",code:"BY",dial:"+375",flag:"🇧🇾"},
+  {name:"Belgium",code:"BE",dial:"+32",flag:"🇧🇪"},
+  {name:"Belize",code:"BZ",dial:"+501",flag:"🇧🇿"},
+  {name:"Benin",code:"BJ",dial:"+229",flag:"🇧🇯"},
+  {name:"Bhutan",code:"BT",dial:"+975",flag:"🇧🇹"},
+  {name:"Bolivia",code:"BO",dial:"+591",flag:"🇧🇴"},
+  {name:"Bosnia and Herzegovina",code:"BA",dial:"+387",flag:"🇧🇦"},
+  {name:"Botswana",code:"BW",dial:"+267",flag:"🇧🇼"},
+  {name:"Brazil",code:"BR",dial:"+55",flag:"🇧🇷"},
+  {name:"Brunei",code:"BN",dial:"+673",flag:"🇧🇳"},
+  {name:"Bulgaria",code:"BG",dial:"+359",flag:"🇧🇬"},
+  {name:"Burkina Faso",code:"BF",dial:"+226",flag:"🇧🇫"},
+  {name:"Burundi",code:"BI",dial:"+257",flag:"🇧🇮"},
+  {name:"Cambodia",code:"KH",dial:"+855",flag:"🇰🇭"},
+  {name:"Cameroon",code:"CM",dial:"+237",flag:"🇨🇲"},
+  {name:"Canada",code:"CA",dial:"+1",flag:"🇨🇦"},
+  {name:"Cape Verde",code:"CV",dial:"+238",flag:"🇨🇻"},
+  {name:"Central African Republic",code:"CF",dial:"+236",flag:"🇨🇫"},
+  {name:"Chad",code:"TD",dial:"+235",flag:"🇹🇩"},
+  {name:"Chile",code:"CL",dial:"+56",flag:"🇨🇱"},
+  {name:"China",code:"CN",dial:"+86",flag:"🇨🇳"},
+  {name:"Colombia",code:"CO",dial:"+57",flag:"🇨🇴"},
+  {name:"Comoros",code:"KM",dial:"+269",flag:"🇰🇲"},
+  {name:"Congo",code:"CG",dial:"+242",flag:"🇨🇬"},
+  {name:"Costa Rica",code:"CR",dial:"+506",flag:"🇨🇷"},
+  {name:"Croatia",code:"HR",dial:"+385",flag:"🇭🇷"},
+  {name:"Cuba",code:"CU",dial:"+53",flag:"🇨🇺"},
+  {name:"Cyprus",code:"CY",dial:"+357",flag:"🇨🇾"},
+  {name:"Czech Republic",code:"CZ",dial:"+420",flag:"🇨🇿"},
+  {name:"Denmark",code:"DK",dial:"+45",flag:"🇩🇰"},
+  {name:"Djibouti",code:"DJ",dial:"+253",flag:"🇩🇯"},
+  {name:"Dominica",code:"DM",dial:"+1767",flag:"🇩🇲"},
+  {name:"Dominican Republic",code:"DO",dial:"+1809",flag:"🇩🇴"},
+  {name:"Ecuador",code:"EC",dial:"+593",flag:"🇪🇨"},
+  {name:"Egypt",code:"EG",dial:"+20",flag:"🇪🇬"},
+  {name:"El Salvador",code:"SV",dial:"+503",flag:"🇸🇻"},
+  {name:"Equatorial Guinea",code:"GQ",dial:"+240",flag:"🇬🇶"},
+  {name:"Eritrea",code:"ER",dial:"+291",flag:"🇪🇷"},
+  {name:"Estonia",code:"EE",dial:"+372",flag:"🇪🇪"},
+  {name:"Eswatini",code:"SZ",dial:"+268",flag:"🇸🇿"},
+  {name:"Ethiopia",code:"ET",dial:"+251",flag:"🇪🇹"},
+  {name:"Fiji",code:"FJ",dial:"+679",flag:"🇫🇯"},
+  {name:"Finland",code:"FI",dial:"+358",flag:"🇫🇮"},
+  {name:"France",code:"FR",dial:"+33",flag:"🇫🇷"},
+  {name:"Gabon",code:"GA",dial:"+241",flag:"🇬🇦"},
+  {name:"Gambia",code:"GM",dial:"+220",flag:"🇬🇲"},
+  {name:"Georgia",code:"GE",dial:"+995",flag:"🇬🇪"},
+  {name:"Germany",code:"DE",dial:"+49",flag:"🇩🇪"},
+  {name:"Ghana",code:"GH",dial:"+233",flag:"🇬🇭"},
+  {name:"Greece",code:"GR",dial:"+30",flag:"🇬🇷"},
+  {name:"Grenada",code:"GD",dial:"+1473",flag:"🇬🇩"},
+  {name:"Guatemala",code:"GT",dial:"+502",flag:"🇬🇹"},
+  {name:"Guinea",code:"GN",dial:"+224",flag:"🇬🇳"},
+  {name:"Guinea-Bissau",code:"GW",dial:"+245",flag:"🇬🇼"},
+  {name:"Guyana",code:"GY",dial:"+592",flag:"🇬🇾"},
+  {name:"Haiti",code:"HT",dial:"+509",flag:"🇭🇹"},
+  {name:"Honduras",code:"HN",dial:"+504",flag:"🇭🇳"},
+  {name:"Hungary",code:"HU",dial:"+36",flag:"🇭🇺"},
+  {name:"Iceland",code:"IS",dial:"+354",flag:"🇮🇸"},
+  {name:"India",code:"IN",dial:"+91",flag:"🇮🇳"},
+  {name:"Indonesia",code:"ID",dial:"+62",flag:"🇮🇩"},
+  {name:"Iran",code:"IR",dial:"+98",flag:"🇮🇷"},
+  {name:"Iraq",code:"IQ",dial:"+964",flag:"🇮🇶"},
+  {name:"Ireland",code:"IE",dial:"+353",flag:"🇮🇪"},
+  {name:"Israel",code:"IL",dial:"+972",flag:"🇮🇱"},
+  {name:"Italy",code:"IT",dial:"+39",flag:"🇮🇹"},
+  {name:"Jamaica",code:"JM",dial:"+1876",flag:"🇯🇲"},
+  {name:"Japan",code:"JP",dial:"+81",flag:"🇯🇵"},
+  {name:"Jordan",code:"JO",dial:"+962",flag:"🇯🇴"},
+  {name:"Kazakhstan",code:"KZ",dial:"+7",flag:"🇰🇿"},
+  {name:"Kenya",code:"KE",dial:"+254",flag:"🇰🇪"},
+  {name:"Kiribati",code:"KI",dial:"+686",flag:"🇰🇮"},
+  {name:"Kuwait",code:"KW",dial:"+965",flag:"🇰🇼"},
+  {name:"Kyrgyzstan",code:"KG",dial:"+996",flag:"🇰🇬"},
+  {name:"Laos",code:"LA",dial:"+856",flag:"🇱🇦"},
+  {name:"Latvia",code:"LV",dial:"+371",flag:"🇱🇻"},
+  {name:"Lebanon",code:"LB",dial:"+961",flag:"🇱🇧"},
+  {name:"Lesotho",code:"LS",dial:"+266",flag:"🇱🇸"},
+  {name:"Liberia",code:"LR",dial:"+231",flag:"🇱🇷"},
+  {name:"Libya",code:"LY",dial:"+218",flag:"🇱🇾"},
+  {name:"Liechtenstein",code:"LI",dial:"+423",flag:"🇱🇮"},
+  {name:"Lithuania",code:"LT",dial:"+370",flag:"🇱🇹"},
+  {name:"Luxembourg",code:"LU",dial:"+352",flag:"🇱🇺"},
+  {name:"Madagascar",code:"MG",dial:"+261",flag:"🇲🇬"},
+  {name:"Malawi",code:"MW",dial:"+265",flag:"🇲🇼"},
+  {name:"Malaysia",code:"MY",dial:"+60",flag:"🇲🇾"},
+  {name:"Maldives",code:"MV",dial:"+960",flag:"🇲🇻"},
+  {name:"Mali",code:"ML",dial:"+223",flag:"🇲🇱"},
+  {name:"Malta",code:"MT",dial:"+356",flag:"🇲🇹"},
+  {name:"Marshall Islands",code:"MH",dial:"+692",flag:"🇲🇭"},
+  {name:"Mauritania",code:"MR",dial:"+222",flag:"🇲🇷"},
+  {name:"Mauritius",code:"MU",dial:"+230",flag:"🇲🇺"},
+  {name:"Mexico",code:"MX",dial:"+52",flag:"🇲🇽"},
+  {name:"Micronesia",code:"FM",dial:"+691",flag:"🇫🇲"},
+  {name:"Moldova",code:"MD",dial:"+373",flag:"🇲🇩"},
+  {name:"Monaco",code:"MC",dial:"+377",flag:"🇲🇨"},
+  {name:"Mongolia",code:"MN",dial:"+976",flag:"🇲🇳"},
+  {name:"Montenegro",code:"ME",dial:"+382",flag:"🇲🇪"},
+  {name:"Morocco",code:"MA",dial:"+212",flag:"🇲🇦"},
+  {name:"Mozambique",code:"MZ",dial:"+258",flag:"🇲🇿"},
+  {name:"Myanmar",code:"MM",dial:"+95",flag:"🇲🇲"},
+  {name:"Namibia",code:"NA",dial:"+264",flag:"🇳🇦"},
+  {name:"Nauru",code:"NR",dial:"+674",flag:"🇳🇷"},
+  {name:"Nepal",code:"NP",dial:"+977",flag:"🇳🇵"},
+  {name:"Netherlands",code:"NL",dial:"+31",flag:"🇳🇱"},
+  {name:"New Zealand",code:"NZ",dial:"+64",flag:"🇳🇿"},
+  {name:"Nicaragua",code:"NI",dial:"+505",flag:"🇳🇮"},
+  {name:"Niger",code:"NE",dial:"+227",flag:"🇳🇪"},
+  {name:"Nigeria",code:"NG",dial:"+234",flag:"🇳🇬"},
+  {name:"North Korea",code:"KP",dial:"+850",flag:"🇰🇵"},
+  {name:"North Macedonia",code:"MK",dial:"+389",flag:"🇲🇰"},
+  {name:"Norway",code:"NO",dial:"+47",flag:"🇳🇴"},
+  {name:"Oman",code:"OM",dial:"+968",flag:"🇴🇲"},
+  {name:"Pakistan",code:"PK",dial:"+92",flag:"🇵🇰"},
+  {name:"Palau",code:"PW",dial:"+680",flag:"🇵🇼"},
+  {name:"Palestine",code:"PS",dial:"+970",flag:"🇵🇸"},
+  {name:"Panama",code:"PA",dial:"+507",flag:"🇵🇦"},
+  {name:"Papua New Guinea",code:"PG",dial:"+675",flag:"🇵🇬"},
+  {name:"Paraguay",code:"PY",dial:"+595",flag:"🇵🇾"},
+  {name:"Peru",code:"PE",dial:"+51",flag:"🇵🇪"},
+  {name:"Philippines",code:"PH",dial:"+63",flag:"🇵🇭"},
+  {name:"Poland",code:"PL",dial:"+48",flag:"🇵🇱"},
+  {name:"Portugal",code:"PT",dial:"+351",flag:"🇵🇹"},
+  {name:"Qatar",code:"QA",dial:"+974",flag:"🇶🇦"},
+  {name:"Romania",code:"RO",dial:"+40",flag:"🇷🇴"},
+  {name:"Russia",code:"RU",dial:"+7",flag:"🇷🇺"},
+  {name:"Rwanda",code:"RW",dial:"+250",flag:"🇷🇼"},
+  {name:"Saint Kitts and Nevis",code:"KN",dial:"+1869",flag:"🇰🇳"},
+  {name:"Saint Lucia",code:"LC",dial:"+1758",flag:"🇱🇨"},
+  {name:"Saint Vincent and the Grenadines",code:"VC",dial:"+1784",flag:"🇻🇨"},
+  {name:"Samoa",code:"WS",dial:"+685",flag:"🇼🇸"},
+  {name:"San Marino",code:"SM",dial:"+378",flag:"🇸🇲"},
+  {name:"Sao Tome and Principe",code:"ST",dial:"+239",flag:"🇸🇹"},
+  {name:"Saudi Arabia",code:"SA",dial:"+966",flag:"🇸🇦"},
+  {name:"Senegal",code:"SN",dial:"+221",flag:"🇸🇳"},
+  {name:"Serbia",code:"RS",dial:"+381",flag:"🇷🇸"},
+  {name:"Seychelles",code:"SC",dial:"+248",flag:"🇸🇨"},
+  {name:"Sierra Leone",code:"SL",dial:"+232",flag:"🇸🇱"},
+  {name:"Singapore",code:"SG",dial:"+65",flag:"🇸🇬"},
+  {name:"Slovakia",code:"SK",dial:"+421",flag:"🇸🇰"},
+  {name:"Slovenia",code:"SI",dial:"+386",flag:"🇸🇮"},
+  {name:"Solomon Islands",code:"SB",dial:"+677",flag:"🇸🇧"},
+  {name:"Somalia",code:"SO",dial:"+252",flag:"🇸🇴"},
+  {name:"South Africa",code:"ZA",dial:"+27",flag:"🇿🇦"},
+  {name:"South Korea",code:"KR",dial:"+82",flag:"🇰🇷"},
+  {name:"South Sudan",code:"SS",dial:"+211",flag:"🇸🇸"},
+  {name:"Spain",code:"ES",dial:"+34",flag:"🇪🇸"},
+  {name:"Sri Lanka",code:"LK",dial:"+94",flag:"🇱🇰"},
+  {name:"Sudan",code:"SD",dial:"+249",flag:"🇸🇩"},
+  {name:"Suriname",code:"SR",dial:"+597",flag:"🇸🇷"},
+  {name:"Sweden",code:"SE",dial:"+46",flag:"🇸🇪"},
+  {name:"Switzerland",code:"CH",dial:"+41",flag:"🇨🇭"},
+  {name:"Syria",code:"SY",dial:"+963",flag:"🇸🇾"},
+  {name:"Taiwan",code:"TW",dial:"+886",flag:"🇹🇼"},
+  {name:"Tajikistan",code:"TJ",dial:"+992",flag:"🇹🇯"},
+  {name:"Tanzania",code:"TZ",dial:"+255",flag:"🇹🇿"},
+  {name:"Thailand",code:"TH",dial:"+66",flag:"🇹🇭"},
+  {name:"Timor-Leste",code:"TL",dial:"+670",flag:"🇹🇱"},
+  {name:"Togo",code:"TG",dial:"+228",flag:"🇹🇬"},
+  {name:"Tonga",code:"TO",dial:"+676",flag:"🇹🇴"},
+  {name:"Trinidad and Tobago",code:"TT",dial:"+1868",flag:"🇹🇹"},
+  {name:"Tunisia",code:"TN",dial:"+216",flag:"🇹🇳"},
+  {name:"Turkey",code:"TR",dial:"+90",flag:"🇹🇷"},
+  {name:"Turkmenistan",code:"TM",dial:"+993",flag:"🇹🇲"},
+  {name:"Tuvalu",code:"TV",dial:"+688",flag:"🇹🇻"},
+  {name:"Uganda",code:"UG",dial:"+256",flag:"🇺🇬"},
+  {name:"Ukraine",code:"UA",dial:"+380",flag:"🇺🇦"},
+  {name:"United Arab Emirates",code:"AE",dial:"+971",flag:"🇦🇪"},
+  {name:"United Kingdom",code:"GB",dial:"+44",flag:"🇬🇧"},
+  {name:"United States",code:"US",dial:"+1",flag:"🇺🇸"},
+  {name:"Uruguay",code:"UY",dial:"+598",flag:"🇺🇾"},
+  {name:"Uzbekistan",code:"UZ",dial:"+998",flag:"🇺🇿"},
+  {name:"Vanuatu",code:"VU",dial:"+678",flag:"🇻🇺"},
+  {name:"Vatican City",code:"VA",dial:"+379",flag:"🇻🇦"},
+  {name:"Venezuela",code:"VE",dial:"+58",flag:"🇻🇪"},
+  {name:"Vietnam",code:"VN",dial:"+84",flag:"🇻🇳"},
+  {name:"Yemen",code:"YE",dial:"+967",flag:"🇾🇪"},
+  {name:"Zambia",code:"ZM",dial:"+260",flag:"🇿🇲"},
+  {name:"Zimbabwe",code:"ZW",dial:"+263",flag:"🇿🇼"},
+];
+
+// ── BUILD DIAL CODE SELECT ──
+(function(){
+  const sel = document.getElementById('dialCode');
+  COUNTRIES.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.dial;
+    o.textContent = c.flag + ' ' + c.dial + ' (' + c.code + ')';
+    if(c.code==='IN') o.selected = true;
+    sel.appendChild(o);
+  });
+})();
+
+// ── COUNTRY DROPDOWN ──
+let selectedCountry = null;
+function buildCountryDrop(filter){
+  const drop = document.getElementById('countryDrop');
+  drop.innerHTML = '';
+  const list = filter ? COUNTRIES.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : COUNTRIES;
+  list.forEach(c=>{
+    const d = document.createElement('div');
+    d.className = 'country-opt';
+    d.innerHTML = '<span class="flag">'+c.flag+'</span><span>'+c.name+'</span><span style="margin-left:auto;font-size:0.75rem;color:#64748b;">'+c.dial+'</span>';
+    d.onmousedown = ()=>{ selectCountry(c); };
+    drop.appendChild(d);
+  });
+}
+function openCountryDrop(){
+  buildCountryDrop(document.getElementById('countrySearch').value);
+  document.getElementById('countryDrop').classList.add('open');
+}
+function closeCountryDrop(){ setTimeout(()=>document.getElementById('countryDrop').classList.remove('open'),200); }
+function filterCountries(){ buildCountryDrop(document.getElementById('countrySearch').value); }
+function selectCountry(c){
+  selectedCountry = c;
+  document.getElementById('countrySearch').value = '';
+  document.getElementById('countryValue').value = c.name;
+  document.getElementById('countryDisplay').innerHTML = c.flag+' <strong>'+c.name+'</strong> &nbsp;<span style="color:#64748b;font-size:0.78rem;">'+c.dial+'</span>';
+  // auto-set dial code
+  const sel = document.getElementById('dialCode');
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].value === c.dial){ sel.selectedIndex=i; break; }
+  }
+}
+
+// ── STARS ──
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+0.5;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(Math.random()*4+2)+'s;animation-delay:'+(Math.random()*5)+'s;';
+    c.appendChild(s);
+  }
+})();
+
+// ── NAVIGATION ──
+function openForm(){
+  document.getElementById('welcome-page').style.display='none';
+  document.getElementById('form-page').style.display='block';
+  window.scrollTo(0,0);
+}
+function backToWelcome(){
+  document.getElementById('form-page').style.display='none';
+  document.getElementById('welcome-page').style.display='flex';
+  window.scrollTo(0,0);
+}
+
+// ── PROGRESS ──
+function upProg(){
+  const r=['fname','lname','email','uname','pass'];
+  const f=r.filter(id=>document.getElementById(id).value.trim()!=='').length;
+  const p=Math.round(f/r.length*100);
+  document.getElementById('pfill').style.width=p+'%';
+  document.getElementById('plabel').textContent=p+'% complete';
+}
+
+// ── FILE NAME ──
+function sfn(inp,tid){
+  const el=document.getElementById(tid);
+  if(inp.files.length===1)el.textContent='✅ '+inp.files[0].name;
+  else if(inp.files.length>1)el.textContent='✅ '+inp.files.length+' files selected';
+  else el.textContent='No file selected';
+}
+
+// ── HELPERS ──
+function gc(p){return Array.from(document.querySelectorAll('input[type="checkbox"][id^="'+p+'"]')).filter(c=>c.checked).map(c=>c.value).join(', ')||'—';}
+function gr(n){const e=document.querySelector('input[name="'+n+'"]:checked');return e?e.value:'—';}
+function fl(id){const e=document.getElementById(id);if(!e||!e.files||!e.files.length)return'—';return e.files.length===1?e.files[0].name:e.files.length+' files';}
+function tv(id){return document.getElementById(id).checked?'✅ On':'❌ Off';}
+function v(id){const e=document.getElementById(id);return e&&e.value?e.value:'—';}
+
+// ── SUBMIT ──
+function submitF(){
+  const dial = document.getElementById('dialCode').value;
+  const phone = v('phone');
+  const fullPhone = (phone!=='—') ? dial+' '+phone : '—';
+  const country = v('countryValue') || (selectedCountry?selectedCountry.name:'—');
+
+  const fs=[
+    {k:'First Name',v:v('fname')},{k:'Last Name',v:v('lname')},
+    {k:'Email',v:v('email')},{k:'Phone (with dial code)',v:fullPhone},
+    {k:'Date of Birth',v:v('dob')},{k:'Age',v:v('age')},
+    {k:'Gender',v:gr('gender')},{k:'Username',v:v('uname')},
+    {k:'Password',v:v('pass')!=='—'?'••••••••':'—'},
+    {k:'Website',v:v('website')},{k:'Search Tags',v:v('stags')},
+    {k:'Street Address',v:v('addr')},{k:'City',v:v('city')},
+    {k:'State',v:v('state')},{k:'PIN/ZIP',v:v('pin')},
+    {k:'Country',v: selectedCountry ? selectedCountry.flag+' '+selectedCountry.name+' ('+selectedCountry.dial+')' : country},
+    {k:'Skills',v:gc('sk'),f:true},{k:'Experience Level',v:gr('exp')},
+    {k:'Bio',v:v('bio'),f:true},{k:'Meeting Time',v:v('atime')},
+    {k:'Fav Color',v:'<span style="display:inline-block;width:18px;height:18px;background:'+v('fcolor')+';border-radius:4px;vertical-align:middle;margin-right:6px;border:1px solid rgba(255,255,255,.2)"></span>'+v('fcolor')},
+    {k:'Department',v:v('dept')},{k:'Expected Salary',v:v('salary')!=='—'?v('salary')+' LPA':'—'},
+    {k:'Profile Score',v:document.getElementById('sv').textContent},
+    {k:'Email Notifs',v:tv('ne')},{k:'SMS Alerts',v:tv('ns')},
+    {k:'Push Notifs',v:tv('np')},{k:'Newsletter',v:tv('nl')},
+    {k:'Profile Photo',v:fl('up-prof')},{k:'Resume/CV',v:fl('up-res')},
+    {k:'Reguma Docs',v:fl('up-reg')},{k:'Portfolio',v:fl('up-port')},
+    {k:'Terms & Conditions',v:document.getElementById('terms').checked?'✅ Agreed':'❌ Not agreed'},
+    {k:'Privacy Policy',v:document.getElementById('priv').checked?'✅ Accepted':'❌ Not accepted'},
+    {k:'Marketing Consent',v:document.getElementById('mkt').checked?'✅ Yes':'❌ No'},
+  ];
+  const rows=fs.map(x=>'<div class="oi'+(x.f?' full':'')+'"><div class="ok">'+x.k+'</div><div class="ov">'+x.v+'</div></div>').join('');
+  document.getElementById('out-div').innerHTML='<div class="ot">✅ Form Submitted Successfully!</div><div class="og">'+rows+'</div>';
+  const s=document.getElementById('out-sec');s.style.display='block';s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── RESET ──
+function resetF(){
+  document.querySelectorAll('input:not([type=radio]):not([type=checkbox]):not([type=range]):not([type=color])').forEach(i=>i.value='');
+  document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(i=>i.checked=false);
+  document.getElementById('score').value=50;document.getElementById('sv').textContent='50%';
+  document.getElementById('fcolor').value='#a78bfa';
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  // reset dial to India
+  const sel=document.getElementById('dialCode');
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].text.includes('IN')){sel.selectedIndex=i;break;}}
+  document.querySelectorAll('textarea').forEach(t=>t.value='');
+  ['pfname','rfname','rgfname','pofname'].forEach(id=>document.getElementById(id).textContent='No file selected');
+  selectedCountry=null;
+  document.getElementById('countryDisplay').textContent='No country selected';
+  document.getElementById('countryValue').value='';
+  document.getElementById('out-sec').style.display='none';
+  upProg();
+}
+</script>
+</body>
+</html>
